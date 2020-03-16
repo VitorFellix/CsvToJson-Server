@@ -16,18 +16,17 @@ public class Main {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String filePathCSV = "resources//File.csv";
+		String filePathCSV = "resources//brasil.csv";
 		String filePathJSON = "resources//File.json";
-		createJsonFile(filePathJSON, createLancamentoList(filePathCSV));
+		//createJsonFile(filePathJSON, createLancamentoList(filePathCSV));
 		
 		//Le o arquivo CSV
 		//List<String> fileContent = readFile(filePathCSV);
-		
-		//Cria lista de lancamentos
-		//List<Lancamento> lancamentos = createLancamentoList(filePath);
-		
-		//Exemplo para rever quando necessário
 		//for (String string : fileContent) {System.out.println(string);}
+		
+		//Cria lista de pessoas
+		List<People> peoples = createPeopleList(filePathCSV);
+		
 	}
 	
 	private static List<String> readFile(String filePath) {
@@ -61,32 +60,31 @@ public class Main {
 		}
 	}
 	
-	private static List<Lancamento> createLancamentoList(String filePathCSV) {
+	private static List<People> createPeopleList(String filePathCSV) {
 		//Get Content of the file
 		List<String> listFileContent = readFile(filePathCSV);
 		//Puts it in a Array
 		String[] arrayFileContent = listFileContent.toArray(new String[listFileContent.size()]);
 		//Create the list of Objects
-		List<Lancamento> lancamentos =  new ArrayList<Lancamento>();;
+		List<People> listOfPeoples =  new ArrayList<People>();;
 		//For every string in the array
-		for (int i = 0; i < arrayFileContent.length; i++) {
+		for (int i = 1; i < arrayFileContent.length; i++) {
 			//Separates the Array in 3 parts
 			String[] tempString = removeUnwantedChars(arrayFileContent[i]);
 			//Creates the object
-			Lancamento lancamento = new Lancamento(tempString[0], tempString[1], Float.parseFloat(tempString[2]));
-			lancamentos.add(lancamento);
+			People people = new People(tempString);
+			listOfPeoples.add(people);
 			//Prints it
 			//System.out.println(lancamento.toString());
 		}
-		return lancamentos;
+		return listOfPeoples;
 	}
 
 	private static String[] removeUnwantedChars(String notFormated) {
 		//Separates the Array in 3 parts
-		String[] formated = notFormated.split(";");
+		String[] formated = notFormated.split(",");
 		//Removes unwanted chars
-		formated[2] = formated[2].replace("R$", "");
-		formated[2] = formated[2].replace(",", ".");
+		formated[6] = formated[6].replace("\"", "");
 		return formated;
 	}
 
