@@ -60,7 +60,7 @@ public class People {
 		i++;
 		try {
 			String[] temp = people[i].split("/");
-			System.out.println(temp);
+			//System.out.println(temp);
 			LocalDate date = LocalDate.of(Integer.parseInt(temp[1]), 01,
 					Integer.parseInt(temp[0]));
 			//System.out.println("local date exp: " + date.format(formatter));
