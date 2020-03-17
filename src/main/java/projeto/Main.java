@@ -19,16 +19,16 @@ public class Main {
 		String filePathCSV = "resources//brasil.csv";
 		String filePathJSON = "resources//File.json";
 		//createJsonFile(filePathJSON, createLancamentoList(filePathCSV));
-		
+
 		//Le o arquivo CSV
 		//List<String> fileContent = readFile(filePathCSV);
 		//for (String string : fileContent) {System.out.println(string);}
-		
+
 		//Cria lista de pessoas
 		List<People> peoples = createPeopleList(filePathCSV);
-		
+		createJsonFile(filePathJSON, peoples);
 	}
-	
+
 	private static List<String> readFile(String filePath) {
 		try {
 			Path path = Paths.get(filePath);
@@ -39,7 +39,7 @@ public class Main {
 		}
 		return null;
 	}
-	
+
 	private static <T> void createJsonFile(String filePathJSON, List<T> fileContent) {
 		try {
 			//Creates Gson object
@@ -47,19 +47,19 @@ public class Main {
 			//Reads and Writes to JSON from FileContent
 			String Json = gson.toJson(fileContent);
 			//Write to File with BufferedWriter
-			BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePathJSON),StandardOpenOption.WRITE);
+			BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePathJSON),StandardOpenOption.CREATE_NEW);
 			writer.write(Json);
 			writer.close();
-			
+
 			//Output of Json
 			//System.out.println(Json);
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 	private static List<People> createPeopleList(String filePathCSV) {
 		//Get Content of the file
 		List<String> listFileContent = readFile(filePathCSV);
@@ -74,6 +74,7 @@ public class Main {
 			//Creates the object
 			People people = new People(tempString);
 			listOfPeoples.add(people);
+			
 			//Prints it
 			//System.out.println(lancamento.toString());
 		}

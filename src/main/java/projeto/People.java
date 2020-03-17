@@ -1,11 +1,11 @@
 package projeto;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class People {
+	
 	public People(String[] people) {
 		super();
 		int i = 0;
@@ -47,13 +47,15 @@ public class People {
 			// 15
 			this.birthday = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
 			i++;
-			System.out.println("util date: " + this.birthday.toString());
+			//System.out.println("util date: " + this.birthday.toString());
 		} catch (Exception e) {	}
 		// 16
 		CCType = people[i];
 		i++;
+		// 17
 		CCNumber = people[i];
 		i++;
+		// 18
 		CVV2 = people[i];
 		i++;
 		try {
@@ -61,20 +63,25 @@ public class People {
 			System.out.println(temp);
 			LocalDate date = LocalDate.of(Integer.parseInt(temp[1]), 01,
 					Integer.parseInt(temp[0]));
-			System.out.println("local date exp: " + date.format(formatter));
+			//System.out.println("local date exp: " + date.format(formatter));
+			// 19
 			CCExpires = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
 			i++;
-			System.out.println("util date exp: " + this.birthday.toString());
+			//System.out.println("util date exp: " + this.birthday.toString());
 		} catch (Exception e) {	}
-
+		// 20
 		NationalID = people[i];
 		i++;
+		// 21
 		Color = people[i];
 		i++;
+		// 22
 		this.weight = Float.parseFloat(people[i]);
 		i++;
+		// 23
 		this.height = Integer.parseInt(people[i]);
 		i++;
+		// 24
 		GUID = people[i];
 		i++;
 	}
