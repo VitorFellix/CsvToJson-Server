@@ -1,7 +1,6 @@
 package projeto;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class People {
@@ -39,7 +38,6 @@ public class People {
 		this.telephoneNumber = people[i];
 		i++;
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		try {
 			String[] temp = people[i].split("/");
 			LocalDate date = LocalDate.of(Integer.parseInt(temp[2]), Integer.parseInt(temp[0]),
@@ -165,5 +163,15 @@ public class People {
 	private float weight;
 	private int height;
 	private String GUID;
+
+	@Override
+	public String toString() {
+		return "People [CCExpires=" + CCExpires + ", CCNumber=" + CCNumber + ", CCType=" + CCType + ", CVV2=" + CVV2
+				+ ", Color=" + Color + ", GUID=" + GUID + ", NationalID=" + NationalID + ", address=" + address
+				+ ", birthday=" + birthday + ", city=" + city + ", countryFull=" + countryFull + ", email=" + email
+				+ ", gender=" + gender + ", height=" + height + ", id=" + id + ", name=" + name + ", nameSet=" + nameSet
+				+ ", password=" + password + ", pronounRef=" + pronounRef + ", state=" + state + ", telephoneNumber="
+				+ telephoneNumber + ", username=" + username + ", weight=" + weight + ", zipcode=" + zipcode + "]";
+	}
 
 }
