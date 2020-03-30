@@ -25,27 +25,27 @@ public class Converter {
 	String filePathCSV;
 	String filePathJSON;
 	ArrayList<TimeRegistry> timeRegistry;
+	ControlQueue controlQueue;
 	// #endregion
 
 	// Começa o programa
 	// Run(args, filePathJSON, tempos, Input, Calculedtempos);
 
 	public Converter() {
-		scanner = new Scanner(System.in);
 		this.timeRegistry = new ArrayList<TimeRegistry>();
-		this.filePathJSON = "resources//brasil.json";
-		// REMOVE THIS
-		convert();
+		this.filePathJSON = "resources//File.json";
 	}
 
 	public void startMenu() {
 		// Dá a opção para sair ou continuar
+		scanner = new Scanner(System.in);
 		System.out.println("Write 'q' to exit or write 'y' to convert an file.");
 		String InputKey = scanner.nextLine();
 
 		// Verifica o Input recebido
 		if (InputKey.equals("q")) {
 			// Finaliza o Programa
+			System.out.println("Closing...");
 			return;
 		} else if (InputKey.equals("y")) {
 			// Continua a converter
@@ -55,18 +55,12 @@ public class Converter {
 			startMenu();
 		}
 
-		// Informa a saída do programa
-		System.out.println("Closing...");
 	}
 
 	private void convert() {
 		// Input do diretório
-		// REMOVE THIS //
-		//System.out.println("Escreva o diretório do arquivo: \n (Exemplo: resources/brasil.csv)");
-		//this.filePathCSV = scanner.next();
-
-		// REMOVE THIS
-		filePathCSV = "resources/brasil.csv";
+		System.out.println("Escreva o diretório do arquivo:\n\nExemplo:\nresources/brasil.csv");
+		this.filePathCSV = scanner.next();
 		
 		this.filePathCSV.replace("/", "//");
 		
@@ -80,7 +74,7 @@ public class Converter {
 			List<String> fileContent = readFile(path);
 
 			// Cria lista de pessoas
-			List<People> peoples = createListOfPeoples(fileContent);
+			List<People> peoples = parseToPeoples(fileContent);
 
 			
 			// Cria o arquivo JSON
@@ -97,11 +91,11 @@ public class Converter {
 		}
 	}
 
-	private List<People> createListOfPeoples(List<String> fileContent) {
+	private List<People> parseToPeoples(List<String> fileContent) {
 
 		Instant start = Instant.now();
 
-		ControlQueue controlQueue = new ControlQueue(fileContent, 3);
+		controlQueue = new ControlQueue(fileContent, 3);
 		List<People> listOfPeople = controlQueue.getParsedData();
 		
 		try {
@@ -114,7 +108,7 @@ public class Converter {
 		}
 		
 		// Registra o tempo que demorou
-		timeRegistry.add(new TimeRegistry("create_list",Duration.between(start, Instant.now()).toMillis()));
+		timeRegistry.add(new TimeRegistry("parse",Duration.between(start, Instant.now()).toNanos()));
 
 		return listOfPeople;
 	}
@@ -145,7 +139,7 @@ public class Converter {
 		} catch (Exception e) {
 		}
 		
-		timeRegistry.add(new TimeRegistry("create_json_file",Duration.between(start, Instant.now()).toMillis()));
+		timeRegistry.add(new TimeRegistry("write",Duration.between(start, Instant.now()).toNanos()));
 	}
 
 	private List<String> readFile(Path path) {
@@ -154,7 +148,7 @@ public class Converter {
 
 			// Lê o todas as linhas do arquivo
 			List<String> fileContent = Files.readAllLines(path, StandardCharsets.UTF_8);
-			timeRegistry.add(new TimeRegistry("read_file",Duration.between(start, Instant.now()).toMillis()));
+			timeRegistry.add(new TimeRegistry("read ",Duration.between(start, Instant.now()).toNanos()));
 
 			return fileContent;
 		} catch (IOException e) {
@@ -170,14 +164,18 @@ public class Converter {
 				Files.delete(Paths.get(filePath));
 				System.out.println(filePath + " :: File deleted");
 			}
-			
+
 			writer = Files.newBufferedWriter(Paths.get(filePath), StandardOpenOption.CREATE_NEW);
 			String strg = "===================================================\n";
+			List<TimeRegistry> temp = controlQueue.getTimeRegistries();
+			for (TimeRegistry registry : temp) {
+				timeRegistry.add(registry);
+			}
 			for (int i = 0; i < timeRegistry.size(); i++) {
 					strg += timeRegistry.get(i).toString() + "\n";
 			}
 			strg += "===================================================";
-
+			
 			writer.write(strg);
 			writer.close();
 		} catch (IOException e) {

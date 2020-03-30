@@ -4,12 +4,14 @@ import java.util.List;
 import java.util.Vector;
 
 import com.felix.classes.People;
+import com.felix.classes.TimeRegistry;
 import com.felix.thread.ParseData;
 
 public class ControlQueue {
 
 	private static List<String> TaskQueue;//Lista de tarefas
 	private static List<People> ParsedData;
+	private static List<TimeRegistry> timeRegistries;
 	private static boolean receivingData = true;
 	public static Thread th1;
 	public static Thread th2;
@@ -19,15 +21,16 @@ public class ControlQueue {
 		//Utilizo Vector pois ele e Thread-Safe
 		TaskQueue = new Vector<String>();
 		ParsedData = new Vector<People>();
+		timeRegistries = new Vector<TimeRegistry>();
 
-		//Levanta as threads antes
+		//Levanta as threads
 		//for (int i = 0; i < NumThreads; i++) {new Thread(new ParseData("thread " + i)).start();}
 		
 		th1 = new Thread(new ParseData("thread 1"));
 		th2 = new Thread(new ParseData("thread 2"));
 		th1.start();
 		th2.start();
-
+		
 		this.receiveData(dados);
 	}
 	
@@ -70,5 +73,14 @@ public class ControlQueue {
 	
 	public List<People> getParsedData() {
 		return ParsedData;
+	}
+
+	public static void addTimeRegistries(List<TimeRegistry> timeRegistry) {
+		for (TimeRegistry registry : timeRegistry) {
+			timeRegistries.add(registry);
+		}
+	}
+	public List<TimeRegistry> getTimeRegistries(){
+		return timeRegistries;
 	}
 }
