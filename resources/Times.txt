@@ -1,4 +1,11 @@
-=================
-Leitura: 164
-Parse: 745
-Gravação: 834
+===================================================
+[read  :: duration=152000000]
+[parse :: duration=835000000]
+[write :: duration=1137000000]
+[Max thread 1 :: duration=216000000]
+[Min thread 1 :: duration=0]
+[Med thread 1 :: duration=22417]
+[Max thread 2 :: duration=61000000]
+[Min thread 2 :: duration=0]
+[Med thread 2 :: duration=16105]
+===================================================
