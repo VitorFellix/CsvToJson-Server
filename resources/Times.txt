@@ -1,4 +1,4 @@
 =================
-Leitura: 164
-Parse: 745
-Gravação: 834
+[read_file :: duration=190]
+[create_list :: duration=918]
+[create_json_file :: duration=1211]

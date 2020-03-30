@@ -1,16 +1,21 @@
 package com.felix.thread;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.util.ArrayList;
+
+import com.felix.classes.People;
 import com.felix.controller.ControlQueue;
 
 public class ParseData implements Runnable{
 	// Implementa o Runnable para que possa ser rodada por uma thread
 	
 	private String threadName;
-	private String filePath;
+	private ArrayList<Long> timeRegistry;
 	
-	public ParseData(String threadName, String filePath) {
+	public ParseData(String threadName) {
 		this.threadName = threadName;
-		this.filePath = filePath;
+		this.timeRegistry = new ArrayList<Long>();
 	}
 
 	public void run() {
@@ -28,9 +33,34 @@ public class ParseData implements Runnable{
 					}
 				}
 			}else {
-				System.out.println(task + " :: " + threadName);
+				Instant start = Instant.now();
+				Parse(task);
+				timeRegistry.add(Duration.between(start, Instant.now()).toMillis());
+				//System.out.println(threadName  + " :: " + Parse(task).toString());
 			}
 		}while(ControlQueue.isFinished());
 		System.out.println(threadName + " has finished");
+	}
+	
+	private People Parse(String task){
+		try {
+			// Separates the Array in 3 parts
+			String[] formatedString = task.split(",");
+			// Removes unwanted chars
+			formatedString[6] = formatedString[6].replace("\"", "");
+			People people = new People(formatedString);
+			ControlQueue.addData(people);
+			return people;
+		} catch (Exception e) {
+			e.getMessage();
+			return null;
+		}
+	}
+	
+	private String getName() {
+		return threadName;
+	}
+	private ArrayList<Long> getTimeRegistry() {
+		return timeRegistry;
 	}
 }

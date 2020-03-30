@@ -166,12 +166,7 @@ public class People {
 
 	@Override
 	public String toString() {
-		return "People [CCExpires=" + CCExpires + ", CCNumber=" + CCNumber + ", CCType=" + CCType + ", CVV2=" + CVV2
-				+ ", Color=" + Color + ", GUID=" + GUID + ", NationalID=" + NationalID + ", address=" + address
-				+ ", birthday=" + birthday + ", city=" + city + ", countryFull=" + countryFull + ", email=" + email
-				+ ", gender=" + gender + ", height=" + height + ", id=" + id + ", name=" + name + ", nameSet=" + nameSet
-				+ ", password=" + password + ", pronounRef=" + pronounRef + ", state=" + state + ", telephoneNumber="
-				+ telephoneNumber + ", username=" + username + ", weight=" + weight + ", zipcode=" + zipcode + "]";
+		return "id=" + id + ", name=" + name + ", gender=" + gender + ", username=" + username;
 	}
 
 }
