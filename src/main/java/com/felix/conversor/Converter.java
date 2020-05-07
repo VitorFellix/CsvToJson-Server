@@ -3,6 +3,8 @@ package com.felix.conversor;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,17 +22,14 @@ import com.felix.controller.ControlQueue;
 import com.google.gson.Gson;
 
 public class Converter {
-
+	
 	// #region Variaveis
 	Scanner scanner;
 	ArrayList<TimeRegistry> timeRegistry;
 	ControlQueue controlQueue;
 	// #endregion
 
-	// Começa o programa
-	// Run(args, filePathJSON, tempos, Input, Calculedtempos);
-
-	public Converter() {
+	public Converter() throws IOException {
 		this.timeRegistry = new ArrayList<TimeRegistry>();
 	}
 
@@ -53,12 +52,6 @@ public class Converter {
 
 			// Registra os tempos em um arquivo
 			escreverTempos(savePath);
-			
-			System.out.println("Arquivo Convertido com sucesso."); 
-		}
-		// Se não existe
-		else {
-			System.out.println("ERRO!!!\nO arquivo CSV, não existe no diretório selecionado!"); 
 		}
 	}
 
@@ -168,6 +161,5 @@ public class Converter {
 			e.printStackTrace();
 		}
 	}
-
 
 }

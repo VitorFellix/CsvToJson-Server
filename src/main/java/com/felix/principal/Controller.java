@@ -1,10 +1,15 @@
 package com.felix.principal;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.Socket;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
 import com.felix.conversor.Converter;
 
@@ -42,72 +47,133 @@ public class Controller implements Initializable {
 
 	private File fileCSV;
 	private File fileJson;
-	
+
 	boolean csv = false;
 	boolean json = false;
-	
+
+	String SocketIP = "127.0.0.1";
+	int Port = 12345;
+	String serverRequests;
+	String csvArqSelecionado = "Arquivo Csv foi selecionado";
+	String pastaSelecionada = "Pasta foi selecionada";
+	String conectando = "Conectando ao servidor";
+	String enviando = "Enviando paths...";
+	String convertendo = "Convertendo Arquivos...";
+	String esperando = "Esperando por resultados do servidor...";
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
 	}
 
 	@FXML
-	public void ProcurarCsv(ActionEvent event) {
+	public void ProcurarCsv(ActionEvent event) throws UnknownHostException, IOException {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Selecione o arquivo CSV para conversão");
 
 		// seta um filtro para arquivos csv
-		FileChooser.ExtensionFilter extFilter = 
-                new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
-        fileChooser.getExtensionFilters().add(extFilter);
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+		fileChooser.getExtensionFilters().add(extFilter);
 
 		// seta o diretório inicial para o desktop
 		File defaultDirectory = new File(System.getProperty("user.home") + File.separator + "Desktop");
-		if(defaultDirectory != null)
+		if (defaultDirectory != null)
 			fileChooser.setInitialDirectory(defaultDirectory);
-        
-		//Abre a janela de seleção
+
+		// Abre a janela de seleção
 		fileCSV = fileChooser.showOpenDialog((Stage) ((Node) event.getSource()).getScene().getWindow());
 
-		//Verifica se um arquivo foi selecionado
+		// Verifica se um arquivo foi selecionado
 		if (fileCSV != null) {
 			TextField_Csv.appendText(fileCSV.getAbsolutePath().toString());
 			Button_Csv.setDisable(true);
 			csv = true;
+
+			// Outputs
+			TextArea1.appendText("\n" + csvArqSelecionado);
 			System.out.println(fileCSV.getAbsolutePath() + " :: File Csv selected");
-		}else {
+		} else {
 			Button_Csv.setDisable(false);
 			csv = false;
 		}
-		if(csv && json) 
-			converter();
+		if (csv && json)
+			ClientSide();
 	}
 
 	@FXML
-	public void ProcurarJson(ActionEvent event) {
+	public void ProcurarJson(ActionEvent event) throws UnknownHostException, IOException {
 		DirectoryChooser dirChooser = new DirectoryChooser();
 		dirChooser.setTitle("Selecione uma pasta onde o File.Json e o times.txt será salvo");
-		
+
 		// seta o diretório inicial para o desktop
 		File defaultDirectory = new File(System.getProperty("user.home") + File.separator + "Desktop");
-		if(defaultDirectory != null)
+		if (defaultDirectory != null)
 			dirChooser.setInitialDirectory(defaultDirectory);
 
-		//Abre a janela de seleção
-        fileJson = dirChooser.showDialog((Stage) ((Node) event.getSource()).getScene().getWindow());
+		// Abre a janela de seleção
+		fileJson = dirChooser.showDialog((Stage) ((Node) event.getSource()).getScene().getWindow());
 
-		//Verifica se um arquivo foi selecionado
+		// Verifica se um arquivo foi selecionado
 		if (fileJson != null) {
 			TextField_Json.appendText(fileJson.getAbsolutePath().toString());
 			Button_Json.setDisable(true);
 			json = true;
+
+			// Outputs
+			TextArea1.appendText("\n" + pastaSelecionada);
 			System.out.println(fileJson.getAbsolutePath() + " :: Folder selected");
-		}else {
+		} else {
 			Button_Json.setDisable(false);
 			json = false;
 		}
-		if(csv && json) 
-			converter();
+		if (csv && json)
+			ClientSide();
+	}
+
+	private void ClientSide() throws UnknownHostException, IOException {
+		// Outputs
+		TextArea1.appendText("\n" + conectando);
+		System.out.println(conectando + " :: IP = " + SocketIP + " :: PORT = " + Port);
+
+		// Solicita uma conexÃ£o
+		Socket cliente = new Socket(SocketIP, Port);
+
+		// Cria um canal de envio e recebimento
+		PrintStream OutClient = new PrintStream(cliente.getOutputStream());
+		Scanner InServer = new Scanner(cliente.getInputStream());
+
+		// Recebe do Servidor informações
+		serverRequests = InServer.nextLine();
+		TextArea1.appendText("\n" + serverRequests);
+		System.out.println(serverRequests);
+		serverRequests = InServer.nextLine();
+		TextArea1.appendText("\n" + serverRequests);
+		System.out.println(serverRequests);
+		// Recebe do Servidor informações
+
+		// Outputs
+		TextArea1.appendText("\n" + enviando);
+		System.out.println(enviando);
+
+		// Envia os dados
+		OutClient.println(fileCSV.getAbsolutePath());
+		OutClient.println(fileJson.getAbsolutePath());
+
+		// Outputs
+		TextArea1.appendText("\n" + convertendo);
+		TextArea1.appendText("\n" + esperando);
+		System.out.println(convertendo);
+		System.out.println(esperando);
+		
+		serverRequests = InServer.nextLine();
+		if(serverRequests.contentEquals("Sucesso")) {
+			TextArea1.appendText("\n" + serverRequests);
+			System.out.println(serverRequests);
+			cliente.close();
+		}else {
+			TextArea1.appendText("\nNot Sucesso");
+			System.out.println("Not Sucesso");
+		}
 	}
 
 	@FXML
@@ -118,16 +184,12 @@ public class Controller implements Initializable {
 				TextArea1.appendText(task.getMessage());
 			}
 		});
-	
+
 		ProgressBar1.progressProperty().bind(task.progressProperty());
 		new Thread(task).start();
-			
-		System.out.println("Convertendo Arquivos...");
-			
-		Converter converter = new Converter();
-		converter.convert(fileCSV, fileJson);
+
 	}
-	
+
 	Task task = new Task<Void>() {
 		@Override
 		public Void call() {
@@ -151,13 +213,13 @@ public class Controller implements Initializable {
 			super.succeeded();
 			updateMessage("Done!");
 		}
-	
+
 		@Override
 		protected void cancelled() {
 			super.cancelled();
 			updateMessage("Cancelled!");
 		}
-	
+
 		@Override
 		protected void failed() {
 			super.failed();
