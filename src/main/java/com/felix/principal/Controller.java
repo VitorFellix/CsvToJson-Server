@@ -59,7 +59,7 @@ public class Controller implements Initializable {
 	boolean json = false;
 
 	String SocketIP = "127.0.0.1";
-	int Port = 12345;
+	int Port = 12341;
 	String serverRequests;
 	String csvArqSelecionado = "Arquivo Csv foi selecionado";
 	String pastaSelecionada = "Pasta foi selecionada";
@@ -137,17 +137,33 @@ public class Controller implements Initializable {
 			ClientSide();
 	}
 
-	private void ClientSide() throws UnknownHostException, IOException {
+	private void ClientSide(){
 		// Outputs
+		TextArea1.clear();
 		TextArea1.appendText("\n" + conectando);
 		System.out.println(conectando + " :: IP = " + SocketIP + " :: PORT = " + Port);
 
 		// Solicita uma conexÃ£o
-		Socket cliente = new Socket(SocketIP, Port);
+		Socket cliente = null;
+		try {
+			cliente = new Socket(SocketIP, Port);
+		} catch (java.net.ConnectException e) {
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		// Cria um canal de envio e recebimento
-		PrintStream OutClient = new PrintStream(cliente.getOutputStream());
-		Scanner InServer = new Scanner(cliente.getInputStream());
+		PrintStream OutClient = null;
+		Scanner InServer = null;
+		try {
+			OutClient = new PrintStream(cliente.getOutputStream());
+			InServer = new Scanner(cliente.getInputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		// Recebe do Servidor informações
 		serverRequests = InServer.nextLine();
@@ -174,16 +190,25 @@ public class Controller implements Initializable {
 		
 		serverRequests = InServer.nextLine();
 		if(serverRequests.contentEquals("Sucesso")) {
-			TextArea1.appendText("\n" + serverRequests);
-			System.out.println(serverRequests);
-			cliente.close();
-			Button_Csv.setDisable(false);
-			Button_Json.setDisable(false);
-			json = false;
-			csv = false;
+			try {
+				TextArea1.appendText("\n" + serverRequests);
+				System.out.println(serverRequests);
+				Button_Csv.setDisable(false);
+				Button_Json.setDisable(false);
+				json = false;
+				csv = false;
+				cliente.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}else {
-			TextArea1.appendText("\nNot Sucesso");
-			System.out.println("Not Sucesso");
+			try {
+				TextArea1.appendText("\nNot Sucesso");
+				System.out.println("Not Sucesso");
+				cliente.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

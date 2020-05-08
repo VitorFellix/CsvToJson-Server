@@ -13,33 +13,45 @@ public class ControlQueue {
 	private static List<People> ParsedData;//Lista dos dados convertidos para objetos
 	private static List<TimeRegistry> timeRegistries;//Lista de registro de tempos
 	private static boolean receivingData = true;
-	public static Thread th1;
-	public static Thread th2;
+	public static List<Thread> threads;
+	//public static Thread th1;
+	//public static Thread th2;
 
 
 	public ControlQueue(List<String> dados, int NumThreads) {
-		//Utilizo Vector pois ele e Thread-Safe
+		//Utilizar Vector pois e Thread-Safe
 		TaskQueue = new Vector<String>();
 		ParsedData = new Vector<People>();
 		timeRegistries = new Vector<TimeRegistry>();
+		threads = new Vector<>();
 
 		//Levanta as threads
 		//for (int i = 0; i < NumThreads; i++) {new Thread(new ParseData("thread " + i)).start();}
 		
-		th1 = new Thread(new ParseData("thread 1"));
-		th2 = new Thread(new ParseData("thread 2"));
-		th1.start();
-		th2.start();
+		//th1 = new Thread(new ParseData("thread 1"));
+		//th2 = new Thread(new ParseData("thread 2"));
+		//th1.start();
+		//th2.start();
 		
 		this.receiveData(dados);
 	}
 	
 	public void receiveData (List<String> tasks) {
-		//Gerar um dado aleat�rio
+		//Gerar um dado aleatorio
 		receivingData = true;
+		
+		int counter = 0;
 
 		for (String string : tasks) {
 			addTask(string);
+			//System.out.println("1 counter = " + counter + " :: counter100 = " + counter100);
+			if(counter % 100 == 0) {
+				Thread th = new Thread(new ParseData("thread " + counter));
+				System.out.println("Nova Thread :: " + th.getName() + " Starting");
+				th.start();
+				threads.add(th);
+			}
+			counter += 1;
 		}
 
 		receivingData = false;

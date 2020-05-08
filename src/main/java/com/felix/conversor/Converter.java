@@ -63,9 +63,13 @@ public class Converter {
 		List<People> listOfPeople = controlQueue.getParsedData();
 		
 		try {
-			//Espera as duas Threads terminaram para continuar a processar
-			ControlQueue.th1.join();
-			ControlQueue.th2.join();
+			//Espera as Threads terminaram para continuar a processar
+			for(Thread thread : ControlQueue.threads) {
+				thread.join();
+			}
+			
+			//ControlQueue.th1.join();
+			//ControlQueue.th2.join();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
