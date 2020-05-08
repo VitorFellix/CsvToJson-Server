@@ -10,8 +10,8 @@ import com.felix.thread.ParseData;
 public class ControlQueue {
 
 	private static List<String> TaskQueue;//Lista de tarefas
-	private static List<People> ParsedData;
-	private static List<TimeRegistry> timeRegistries;
+	private static List<People> ParsedData;//Lista dos dados convertidos para objetos
+	private static List<TimeRegistry> timeRegistries;//Lista de registro de tempos
 	private static boolean receivingData = true;
 	public static Thread th1;
 	public static Thread th2;

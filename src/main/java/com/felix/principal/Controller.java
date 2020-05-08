@@ -41,13 +41,20 @@ public class Controller implements Initializable {
 	@FXML
 	private TextField TextField_Json;
 	@FXML
-	private ProgressBar ProgressBar1;
+	private ProgressBar ProgressBarLer;
+	@FXML
+	private ProgressBar ProgressBarConverter;
+	@FXML
+	private ProgressBar ProgressBarSalvar;
 	@FXML
 	private TextArea TextArea1;
 
 	private File fileCSV;
 	private File fileJson;
 
+	public static boolean RodandoIniciar = false;
+	
+	
 	boolean csv = false;
 	boolean json = false;
 
@@ -170,6 +177,10 @@ public class Controller implements Initializable {
 			TextArea1.appendText("\n" + serverRequests);
 			System.out.println(serverRequests);
 			cliente.close();
+			Button_Csv.setDisable(false);
+			Button_Json.setDisable(false);
+			json = false;
+			csv = false;
 		}else {
 			TextArea1.appendText("\nNot Sucesso");
 			System.out.println("Not Sucesso");
@@ -185,7 +196,7 @@ public class Controller implements Initializable {
 			}
 		});
 
-		ProgressBar1.progressProperty().bind(task.progressProperty());
+		ProgressBarLer.progressProperty().bind(task.progressProperty());
 		new Thread(task).start();
 
 	}
