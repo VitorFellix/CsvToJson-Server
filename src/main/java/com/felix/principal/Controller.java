@@ -138,6 +138,7 @@ public class Controller implements Initializable {
 	}
 
 	private void ClientSide(){
+		System.out.println("Cliente");
 		// Outputs
 		TextArea1.clear();
 		TextArea1.appendText("\n" + conectando);
@@ -220,9 +221,8 @@ public class Controller implements Initializable {
 				TextArea1.appendText(task.getMessage());
 			}
 		});
-
-		ProgressBarLer.progressProperty().bind(task.progressProperty());
-		new Thread(task).start();
+		//ProgressBarLer.progressProperty().bind(task.progressProperty());
+		//new Thread(task).start();
 
 	}
 

@@ -23,7 +23,7 @@ public class ControlQueue {
 		TaskQueue = new Vector<String>();
 		ParsedData = new Vector<People>();
 		timeRegistries = new Vector<TimeRegistry>();
-		threads = new Vector<>();
+		threads = new Vector<Thread>();
 
 		//Levanta as threads
 		//for (int i = 0; i < NumThreads; i++) {new Thread(new ParseData("thread " + i)).start();}

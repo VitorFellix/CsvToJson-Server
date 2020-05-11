@@ -13,6 +13,7 @@ public class MainServer {
 
 	public static void main(String[] args) throws IOException {
 		while(true) {
+			System.out.println("Servidor");
 			int Port = 12341;
 			ServerSocket server = null;
 	//		Cria um serviÃ§o Socket
