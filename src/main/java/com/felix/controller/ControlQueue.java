@@ -22,6 +22,10 @@ public class ControlQueue {
 		TaskQueue = new Vector<String>();
 		ParsedData = new Vector<People>();
 		timeRegistries = new Vector<TimeRegistry>();
+<<<<<<< Updated upstream
+=======
+		threads = new Vector<Thread>();
+>>>>>>> Stashed changes
 
 		//Levanta as threads
 		//for (int i = 0; i < NumThreads; i++) {new Thread(new ParseData("thread " + i)).start();}
