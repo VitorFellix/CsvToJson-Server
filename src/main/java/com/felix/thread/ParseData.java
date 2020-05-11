@@ -9,9 +9,6 @@ import com.felix.classes.People;
 import com.felix.classes.TimeRegistry;
 import com.felix.controller.ControlQueue;
 
-import javafx.scene.media.Media;
-import sun.awt.windows.ThemeReader;
-
 public class ParseData implements Runnable{
 	// Implementa o Runnable para que possa ser rodada por uma thread
 	
@@ -45,7 +42,8 @@ public class ParseData implements Runnable{
 			}
 		}while(ControlQueue.isFinished());
 		calculateTimes();
-		System.out.println(threadName + " has finished");
+		//System.out.println(threadName + " :: Has finished");
+
 	}
 	
 	private People Parse(String task){
