@@ -1,11 +1,3 @@
 ===================================================
-[read  :: duration=156000000]
-[parse :: duration=843000000]
-[write :: duration=1016000000]
-[Max thread 2 :: duration=254000000]
-[Min thread 2 :: duration=0]
-[Med thread 2 :: duration=22893]
-[Max thread 1 :: duration=254000000]
-[Min thread 1 :: duration=0]
-[Med thread 1 :: duration=22482]
+
 ===================================================

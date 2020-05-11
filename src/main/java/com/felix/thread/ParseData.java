@@ -43,6 +43,7 @@ public class ParseData implements Runnable{
 		}while(ControlQueue.isFinished());
 		calculateTimes();
 		//System.out.println(threadName + " :: Has finished");
+
 	}
 	
 	private People Parse(String task){

@@ -22,7 +22,6 @@ import com.felix.controller.ControlQueue;
 import com.google.gson.Gson;
 
 public class Converter {
-	
 	// #region Variaveis
 	Scanner scanner;
 	ArrayList<TimeRegistry> timeRegistry;
@@ -81,7 +80,9 @@ public class Converter {
 		return listOfPeople;
 	}
 
+
 	private <T> void createJsonFile(List<T> objectList, File savePath) {
+
 		Instant start = Instant.now();
 		// Cria o objeto Gson
 		Gson gson = new Gson();
@@ -100,6 +101,7 @@ public class Converter {
 				System.out.println(path + " :: File already exists");
 				Files.delete(path);
 				System.out.println(path + " :: File deleted");
+
 			} catch (IOException e) {e.printStackTrace();}
 		}
 		
@@ -111,6 +113,7 @@ public class Converter {
 			writer.write(JSON);
 			writer.close();
 			System.out.println(path + " :: Done Writing");
+
 		} catch (Exception e) {
 		}
 		
@@ -145,7 +148,7 @@ public class Converter {
 			writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE_NEW);
 			
 			System.out.println(path + " :: File created");
-			
+
 			String strg = "===================================================\n";
 			List<TimeRegistry> temp = controlQueue.getTimeRegistries();
 			for (TimeRegistry registry : temp) {
@@ -160,10 +163,10 @@ public class Converter {
 			writer.write(strg);
 			writer.close();
 			System.out.println(path + " :: Done Writing");
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
 }
