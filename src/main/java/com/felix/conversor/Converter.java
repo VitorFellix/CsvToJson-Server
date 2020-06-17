@@ -19,6 +19,8 @@ import com.felix.classes.TimeRegistry;
 import com.felix.controller.ControlQueue;
 import com.google.gson.Gson;
 
+import javafx.scene.control.TextArea;
+
 public class Converter {
 	// #region Variaveis
 	Scanner scanner;
@@ -30,7 +32,7 @@ public class Converter {
 		this.timeRegistry = new ArrayList<TimeRegistry>();
 	}
 
-	public void convert(File Csv, File savePath) {
+	public void convert(File Csv, File savePath, TextArea textArea) {
 		
 		// Get path
 		Path path = Paths.get(Csv.getAbsolutePath());
@@ -39,21 +41,37 @@ public class Converter {
 		if (Csv.exists()) {
 
 			// Lê o Arquivo
-			List<String> fileContent = readFile(path);
+			List<String> fileContent = readFile(path, textArea);
 
 			// Cria lista de pessoas
-			List<People> peoples = parseToPeoples(fileContent);
+			List<People> peoples = parseToPeoples(fileContent, textArea);
 
 			// Cria o arquivo JSON
-			createJsonFile(peoples, savePath);
+			createJsonFile(peoples, savePath, textArea);
 
 			// Registra os tempos em um arquivo
-			escreverTempos(savePath);
+			escreverTempos(savePath, textArea);
 		}
 	}
+	private List<String> readFile(Path path, TextArea textArea) {
+		try {
+			Instant start = Instant.now();
+			textArea.appendText("Lendo Arquivo CSV\n");
+			// Lê o todas as linhas do arquivo
+			List<String> fileContent = Files.readAllLines(path, StandardCharsets.UTF_8);
+			timeRegistry.add(new TimeRegistry("read ",Duration.between(start, Instant.now()).toNanos()));
 
-	private List<People> parseToPeoples(List<String> fileContent) {
+			textArea.appendText("Arquivo CSV foi lido\n");
+			return fileContent;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private List<People> parseToPeoples(List<String> fileContent, TextArea textArea) {
 
+		textArea.appendText("Convertendo para Objetos\n");
 		Instant start = Instant.now();
 
 		controlQueue = new ControlQueue(fileContent, 3);
@@ -75,12 +93,14 @@ public class Converter {
 		// Registra o tempo que demorou
 		timeRegistry.add(new TimeRegistry("parse",Duration.between(start, Instant.now()).toNanos()));
 
+		textArea.appendText("Objetos foram convertidos\n");
 		return listOfPeople;
 	}
 
 
-	private <T> void createJsonFile(List<T> objectList, File savePath) {
+	private <T> void createJsonFile(List<T> objectList, File savePath, TextArea textArea) {
 
+		textArea.appendText("Escrevendo JSON\n");
 		Instant start = Instant.now();
 		// Cria o objeto Gson
 		Gson gson = new Gson();
@@ -111,6 +131,7 @@ public class Converter {
 			writer.write(JSON);
 			writer.close();
 			System.out.println(path + " :: Done Writing");
+			textArea.appendText("JSON foi escrito\n");
 
 		} catch (Exception e) {
 		}
@@ -118,23 +139,11 @@ public class Converter {
 		timeRegistry.add(new TimeRegistry("write",Duration.between(start, Instant.now()).toNanos()));
 	}
 
-	private List<String> readFile(Path path) {
+
+
+	private void escreverTempos(File savePath, TextArea textArea) {
 		try {
-			Instant start = Instant.now();
-
-			// Lê o todas as linhas do arquivo
-			List<String> fileContent = Files.readAllLines(path, StandardCharsets.UTF_8);
-			timeRegistry.add(new TimeRegistry("read ",Duration.between(start, Instant.now()).toNanos()));
-
-			return fileContent;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	private void escreverTempos(File savePath) {
-		try {
+			textArea.appendText("Escrevendo tempos\n");
 			Path path = Paths.get(savePath.getAbsolutePath() + "//Times.txt");
 			BufferedWriter writer;
 			if (Files.exists(path)) {
@@ -161,6 +170,7 @@ public class Converter {
 			writer.write(strg);
 			writer.close();
 			System.out.println(path + " :: Done Writing");
+			textArea.appendText("Tempos foram escritos\n");
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

@@ -19,7 +19,7 @@
             <Button fx:id="Button_Json" layoutX="398.0" layoutY="106.0" mnemonicParsing="false" onAction="#ProcurarJson" text="Salvar em JSON" />
             <TextField fx:id="TextField_Json" layoutX="13.0" layoutY="106.0" prefHeight="25.0" prefWidth="373.0" />
             <Label layoutX="11.0" layoutY="30.0" prefHeight="29.0" prefWidth="486.0" text="Selecione o Arquivo CSV e a Pasta onde será salvo o arquivo JSON" wrapText="true" />
-            <TextArea fx:id="TextArea1" editable="false" layoutX="12.0" layoutY="141.0" prefHeight="160.0" prefWidth="484.0" wrapText="true" />
+            <TextArea fx:id="textArea" editable="false" layoutX="12.0" layoutY="141.0" prefHeight="160.0" prefWidth="484.0" wrapText="true" />
          </children>
       </Pane>
    </bottom>

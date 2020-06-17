@@ -21,7 +21,6 @@ import javafx.stage.Stage;
 
 public class Controller implements Initializable {
 
-	double perc = 0f;
 	@FXML
 	private Button Button_Csv;
 	@FXML
@@ -31,12 +30,10 @@ public class Controller implements Initializable {
 	@FXML
 	private TextField TextField_Json;
 	@FXML
-	private TextArea TextArea1;
+	private TextArea textArea;
 
 	private File fileCSV;
 	private File fileJson;
-
-	public static boolean RodandoIniciar = false;
 	
 	boolean csv = false;
 	boolean json = false;
@@ -71,17 +68,17 @@ public class Controller implements Initializable {
 				csv = true;
 
 				// Outputs
-				TextArea1.appendText("Arquivo Csv foi Selecionado\n");
+				textArea.appendText("Arquivo Csv foi Selecionado\n");
 				System.out.println(fileCSV.getAbsolutePath() + " :: File Csv selected");
 			} else {
 				Button_Csv.setDisable(false);
 				csv = false;
 			}
 			if (csv && json)
-				ClientSide();
+				StartConverting();
 		} catch (Exception e) {
 			e.printStackTrace();
-			TextArea1.appendText("Arquivo Csv não foi Selecionada, por favor selecione novamente\nERRO!");
+			textArea.appendText("Arquivo Csv não foi Selecionada, por favor selecione novamente\nERRO!");
 			Button_Csv.setDisable(false);
 			csv = false;
 		}
@@ -109,32 +106,32 @@ public class Controller implements Initializable {
 				json = true;
 
 				// Outputs
-				TextArea1.appendText("Pasta foi Selecionada\n");
+				textArea.appendText("Pasta foi Selecionada\n");
 				System.out.println(fileJson.getAbsolutePath() + " :: Folder selected");
 			} else {
 				Button_Json.setDisable(false);
 				json = false;
 			}
 			if (csv && json)
-				ClientSide();
+				StartConverting();
 		} catch (Exception e) {
 			e.printStackTrace();
-			TextArea1.appendText("Pasta não foi Selecionada, por favor selecione novamente\nERRO!");
+			textArea.appendText("Pasta não foi Selecionada, por favor selecione novamente\nERRO!");
 			Button_Json.setDisable(false);
 			json = false;
 		}
 	}
 
-	private void ClientSide(){
+	private void StartConverting(){
 		// Outputs
-		TextArea1.clear();
-		TextArea1.appendText("Começando converção");
+		textArea.clear();
+		textArea.appendText("Começando converção\n");
 		
 		try {
 			// Cria um Objeto Converter
 			// Envia os locais para ler o csv e para salvar o json
 			Converter converter = new Converter();
-			converter.convert(fileCSV, fileJson);
+			converter.convert(fileCSV, fileJson, textArea);
 
 			// Reseta a interface e as flags
 			Button_Csv.setDisable(false);
@@ -147,6 +144,6 @@ public class Controller implements Initializable {
 		}
 
 		// Outputs
-		TextArea1.appendText("Converção Terminou");
+		textArea.appendText("Converção Terminou");
 	}
 }

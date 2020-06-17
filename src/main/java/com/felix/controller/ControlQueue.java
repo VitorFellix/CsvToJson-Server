@@ -14,6 +14,7 @@ public class ControlQueue {
 	private static List<TimeRegistry> ListaDeTempos;//Lista de registro de tempos
 	private static boolean receivingData = true;
 	public static List<Thread> ListaDeThreads;
+	private String ThreadName = "Threadripper";
 	//public static Thread th1;
 	//public static Thread th2;
 
@@ -32,7 +33,8 @@ public class ControlQueue {
 		//th1.start();
 		//th2.start();
 		
-		Thread th = new Thread(new ParseData("Thread(ripper)"));
+		Thread th = new Thread(new ParseData(ThreadName));
+		th.setName(ThreadName);
 		System.out.println("Nova Thread :: " + th.getName() + " Starting");
 		th.start();
 		ListaDeThreads.add(th);
