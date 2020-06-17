@@ -13,7 +13,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			this.primaryStage = primaryStage;
+			this.setPrimaryStage(primaryStage);
 			BorderPane root = (BorderPane)FXMLLoader.load(getClass().getResource("FXMLInicial.fxml"));
 			Scene scene = new Scene(root);
 			primaryStage.setScene(scene);
@@ -31,6 +31,11 @@ public class Main extends Application {
 	
 	public static Stage getPrimaryStage() {
 		return primaryStage;
+	}
+
+
+	public void setPrimaryStage(Stage primaryStage) {
+		Main.primaryStage = primaryStage;
 	}
 	
 	

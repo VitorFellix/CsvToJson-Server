@@ -9,90 +9,84 @@ import com.felix.thread.ParseData;
 
 public class ControlQueue {
 
-	private static List<String> TaskQueue;//Lista de tarefas
-	private static List<People> ParsedData;//Lista dos dados convertidos para objetos
-	private static List<TimeRegistry> timeRegistries;//Lista de registro de tempos
+	private static List<String> ListaDeTasks;//Lista de tarefas
+	private static List<People> ListaDePessoas;//Lista dos dados convertidos para objetos
+	private static List<TimeRegistry> ListaDeTempos;//Lista de registro de tempos
 	private static boolean receivingData = true;
-	public static List<Thread> threads;
+	public static List<Thread> ListaDeThreads;
 	//public static Thread th1;
 	//public static Thread th2;
 
 
-	public ControlQueue(List<String> dados, int NumThreads) {
+	public ControlQueue(List<String> ListaDeDados, int NumThreads) {
 		//Utilizar Vector pois e Thread-Safe
-		TaskQueue = new Vector<String>();
-		ParsedData = new Vector<People>();
-		timeRegistries = new Vector<TimeRegistry>();
-		threads = new Vector<Thread>();
+		ListaDeTasks = new Vector<String>();
+		ListaDePessoas = new Vector<People>();
+		ListaDeTempos = new Vector<TimeRegistry>();
+		ListaDeThreads = new Vector<Thread>();
 
 		//Levanta as threads
-		//for (int i = 0; i < NumThreads; i++) {new Thread(new ParseData("thread " + i)).start();}
 		
 		//th1 = new Thread(new ParseData("thread 1"));
 		//th2 = new Thread(new ParseData("thread 2"));
 		//th1.start();
 		//th2.start();
 		
-		this.receiveData(dados);
+		Thread th = new Thread(new ParseData("Thread(ripper)"));
+		System.out.println("Nova Thread :: " + th.getName() + " Starting");
+		th.start();
+		ListaDeThreads.add(th);
+		
+		this.receiveData(ListaDeDados);
 	}
 	
-	public void receiveData (List<String> tasks) {
+	public void receiveData (List<String> dados) {
 		//Gerar um dado aleatorio
 		receivingData = true;
 		
-		int counter = 0;
-
-		for (String string : tasks) {
+		for (String string : dados) {
 			addTask(string);
-			//System.out.println("1 counter = " + counter + " :: counter100 = " + counter100);
-			if(counter % 100 == 0) {
-				Thread th = new Thread(new ParseData("thread " + counter));
-				System.out.println("Nova Thread :: " + th.getName() + " Starting");
-				th.start();
-				threads.add(th);
-			}
-			counter += 1;
 		}
 
 		receivingData = false;
 	}
 
 	public static boolean isFinished() {
-		return receivingData || TaskQueue.size() > 0;
+		return receivingData || ListaDeTasks.size() > 0;
 	}
 	
-	//� necess�rio synchronized para que n�o exista duplicidade de acesso das threads
+	//E necesserio synchronized para que nao exista duplicidade de acesso das threads
 	//A thread que chega depois sempre espera a anterior
-	//SEMPRE DEVE SER UM M�TODO BEM LEVE PARA N�O GERAR GARGALO
+	//SEMPRE DEVE SER UM METODO BEM LEVE PARA NaO GERAR GARGALO
 	
 	public static synchronized String getNextTask() {
 		//Remove o elemento com base no Index e retorna este elemento
-		if(TaskQueue.size() > 0)
+		if(ListaDeTasks.size() > 0)
 			// Remova apenas se tiver alguma coisa na lista
-			return TaskQueue.remove(0);
+			return ListaDeTasks.remove(0);
 		return null;
 	}
 	
 	public void addTask(String Task) {
 		//Adiciona na lista o par�metro
-		TaskQueue.add(Task);
+		ListaDeTasks.add(Task);
 	}
 	
 	public static synchronized void addData(People data) {
 		//Adiciona na lista o par�metro
-		ParsedData.add(data);
+		ListaDePessoas.add(data);
 	}
 	
 	public List<People> getParsedData() {
-		return ParsedData;
+		return ListaDePessoas;
 	}
 
 	public static void addTimeRegistries(List<TimeRegistry> timeRegistry) {
 		for (TimeRegistry registry : timeRegistry) {
-			timeRegistries.add(registry);
+			ListaDeTempos.add(registry);
 		}
 	}
 	public List<TimeRegistry> getTimeRegistries(){
-		return timeRegistries;
+		return ListaDeTempos;
 	}
 }

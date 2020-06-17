@@ -61,7 +61,7 @@ public class Converter {
 		
 		try {
 			//Espera as Threads terminaram para continuar a processar
-			for(Thread thread : ControlQueue.threads) {
+			for(Thread thread : ControlQueue.ListaDeThreads) {
 				thread.join();
 			}
 			
