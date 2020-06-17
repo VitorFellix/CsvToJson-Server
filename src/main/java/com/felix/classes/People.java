@@ -89,30 +89,34 @@ public class People {
 			String telephoneNumber, Date birthday, String cCType, String cCNumber, String cVV2, Date cCExpires,
 			String nationalID, String color, float weight, int height, String gUID) {
 		super();
-		this.id = id;
-		this.gender = gender;
-		this.nameSet = nameSet;
-		this.pronounRef = pronounRef;
-		this.name = name;
-		this.address = address;
-		this.city = city;
-		this.state = state;
-		this.zipcode = zipcode;
-		this.countryFull = countryFull;
-		this.email = email;
-		this.username = username;
-		this.password = password;
-		this.telephoneNumber = telephoneNumber;
-		this.birthday = birthday;
-		CCType = cCType;
-		CCNumber = cCNumber;
-		CVV2 = cVV2;
-		CCExpires = cCExpires;
-		NationalID = nationalID;
-		Color = color;
-		this.weight = weight;
-		this.height = height;
-		GUID = gUID;
+		try {
+			this.id = id;
+			this.gender = gender;
+			this.nameSet = nameSet;
+			this.pronounRef = pronounRef;
+			this.name = name;
+			this.address = address;
+			this.city = city;
+			this.state = state;
+			this.zipcode = zipcode;
+			this.countryFull = countryFull;
+			this.email = email;
+			this.username = username;
+			this.password = password;
+			this.telephoneNumber = telephoneNumber;
+			this.birthday = birthday;
+			CCType = cCType;
+			CCNumber = cCNumber;
+			CVV2 = cVV2;
+			CCExpires = cCExpires;
+			NationalID = nationalID;
+			Color = color;
+			this.weight = weight;
+			this.height = height;
+			GUID = gUID;
+		} catch (Exception e) {
+			System.out.println("ERRO DURANTE A CRIACAO DO OBJETO PESSOA");
+		}
 	}
 
 	public Long getId() {
@@ -164,6 +168,15 @@ public class People {
 	private int height;
 	private String GUID;
 
+	public String allToString() {
+		return "People [id=" + id + ", gender=" + gender + ", nameSet=" + nameSet + ", pronounRef=" + pronounRef
+				+ ", name=" + name + ", address=" + address + ", city=" + city + ", state=" + state + ", zipcode="
+				+ zipcode + ", countryFull=" + countryFull + ", email=" + email + ", username=" + username
+				+ ", password=" + password + ", telephoneNumber=" + telephoneNumber + ", birthday=" + birthday
+				+ ", CCType=" + CCType + ", CCNumber=" + CCNumber + ", CVV2=" + CVV2 + ", CCExpires=" + CCExpires
+				+ ", NationalID=" + NationalID + ", Color=" + Color + ", weight=" + weight + ", height=" + height
+				+ ", GUID=" + GUID + "]";
+	}
 	@Override
 	public String toString() {
 		return "id=" + id + ", name=" + name + ", gender=" + gender + ", username=" + username;

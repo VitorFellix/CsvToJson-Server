@@ -7,13 +7,13 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-public class MainClient extends Application {
+public class Principal extends Application {
 	private static Stage primaryStage;
 	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			this.primaryStage = primaryStage;
+			Principal.primaryStage = primaryStage;
 			BorderPane root = (BorderPane)FXMLLoader.load(getClass().getResource("FXMLInicial.fxml"));
 			Scene scene = new Scene(root);
 			primaryStage.setScene(scene);

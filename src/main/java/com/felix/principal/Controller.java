@@ -6,27 +6,20 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
 import com.felix.conversor.Converter;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
 public class Controller implements Initializable {
@@ -41,12 +34,6 @@ public class Controller implements Initializable {
 	@FXML
 	private TextField TextField_Json;
 	@FXML
-	private ProgressBar ProgressBarLer;
-	@FXML
-	private ProgressBar ProgressBarConverter;
-	@FXML
-	private ProgressBar ProgressBarSalvar;
-	@FXML
 	private TextArea TextArea1;
 
 	private File fileCSV;
@@ -54,19 +41,8 @@ public class Controller implements Initializable {
 
 	public static boolean RodandoIniciar = false;
 	
-	
 	boolean csv = false;
 	boolean json = false;
-
-	String SocketIP = "127.0.0.1";
-	int Port = 12341;
-	String serverRequests;
-	String csvArqSelecionado = "Arquivo Csv foi selecionado";
-	String pastaSelecionada = "Pasta foi selecionada";
-	String conectando = "Conectando ao servidor";
-	String enviando = "Enviando paths...";
-	String convertendo = "Convertendo Arquivos...";
-	String esperando = "Esperando por resultados do servidor...";
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -138,128 +114,27 @@ public class Controller implements Initializable {
 	}
 
 	private void ClientSide(){
-		System.out.println("Cliente");
 		// Outputs
 		TextArea1.clear();
-		TextArea1.appendText("\n" + conectando);
-		System.out.println(conectando + " :: IP = " + SocketIP + " :: PORT = " + Port);
-
-		// Solicita uma conexÃ£o
-		Socket cliente = null;
-		try {
-			cliente = new Socket(SocketIP, Port);
-		} catch (java.net.ConnectException e) {
-			e.printStackTrace();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		// Cria um canal de envio e recebimento
-		PrintStream OutClient = null;
-		Scanner InServer = null;
-		try {
-			OutClient = new PrintStream(cliente.getOutputStream());
-			InServer = new Scanner(cliente.getInputStream());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		// Recebe do Servidor informações
-		serverRequests = InServer.nextLine();
-		TextArea1.appendText("\n" + serverRequests);
-		System.out.println(serverRequests);
-		serverRequests = InServer.nextLine();
-		TextArea1.appendText("\n" + serverRequests);
-		System.out.println(serverRequests);
-		// Recebe do Servidor informações
-
-		// Outputs
-		TextArea1.appendText("\n" + enviando);
-		System.out.println(enviando);
-
-		// Envia os dados
-		OutClient.println(fileCSV.getAbsolutePath());
-		OutClient.println(fileJson.getAbsolutePath());
-
-		// Outputs
-		TextArea1.appendText("\n" + convertendo);
-		TextArea1.appendText("\n" + esperando);
-		System.out.println(convertendo);
-		System.out.println(esperando);
+		TextArea1.appendText("Começando converção");
 		
-		serverRequests = InServer.nextLine();
-		if(serverRequests.contentEquals("Sucesso")) {
-			try {
-				TextArea1.appendText("\n" + serverRequests);
-				System.out.println(serverRequests);
-				Button_Csv.setDisable(false);
-				Button_Json.setDisable(false);
-				json = false;
-				csv = false;
-				cliente.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}else {
-			try {
-				TextArea1.appendText("\nNot Sucesso");
-				System.out.println("Not Sucesso");
-				cliente.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		try {
+			// Cria um Objeto Converter
+			// Envia os locais para ler o csv e para salvar o json
+			Converter converter = new Converter();
+			converter.convert(fileCSV, fileJson);
+
+			// Reseta a interface e as flags
+			Button_Csv.setDisable(false);
+			Button_Json.setDisable(false);
+			json = false;
+			csv = false;
+			
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+
+		// Outputs
+		TextArea1.appendText("Converção Terminou");
 	}
-
-	@FXML
-	public void converter() {
-		task.messageProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> obs, String oldMessage, String newMessage) {
-				TextArea1.appendText(task.getMessage());
-			}
-		});
-		//ProgressBarLer.progressProperty().bind(task.progressProperty());
-		//new Thread(task).start();
-
-	}
-
-	Task task = new Task<Void>() {
-		@Override
-		public Void call() {
-			final int max = 100000000;
-			int centena = 0;
-			for (int i = 1; i <= max; i++) {
-				if (isCancelled()) {
-					break;
-				}
-				updateProgress(i, max);
-
-				if (i % 100 == 0) {
-					updateMessage("Processados: " + ++centena);
-				}
-			}
-			return null;
-		}
-
-		@Override
-		protected void succeeded() {
-			super.succeeded();
-			updateMessage("Done!");
-		}
-
-		@Override
-		protected void cancelled() {
-			super.cancelled();
-			updateMessage("Cancelled!");
-		}
-
-		@Override
-		protected void failed() {
-			super.failed();
-			updateMessage("Failed!");
-		}
-	};
 }
